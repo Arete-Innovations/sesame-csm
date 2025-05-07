@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from api_functions import create_conversation, generate_audio, delete_conversation
+from api_functions import create_conversation, generate_audio, delete_conversation, generate_wav_file
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 

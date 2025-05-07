@@ -3,6 +3,7 @@ import torch
 import torchaudio
 import random
 import pickle
+import io
 from huggingface_hub import hf_hub_download
 from generator import load_csm_1b, Segment
 from dataclasses import dataclass
@@ -29,6 +30,13 @@ SPEAKER_PROMPTS = {
         "audio": prompt_filepath_conversational_a
     }
 }
+
+def generate_wav_file(audio_tensor: torch.Tensor) -> bytes:
+    audio_tensor = audio_tensor.unsqueeze(0).cpu()
+    buffer = io.BytesIO()
+    torchaudio.save(buffer, audio_tensor, sample_rate, format="wav")
+    buffer.seek(0)
+    return buffer
 
 def load_prompt_audio(audio_path: str, target_sample_rate: int) -> torch.Tensor:
     audio_tensor, sample_rate = torchaudio.load(audio_path)
@@ -74,7 +82,7 @@ def generate_audio(conversation_id: int, txt: str):
         text=txt,
         speaker=0,
         context=loaded_context,
-        max_audio_length_ms=10_000,
+        max_audio_length_ms=20_000,
     )
     # Add spoken line to context for future use
     loaded_context.append(Segment(text=txt, speaker=0, audio=audio_tensor))
