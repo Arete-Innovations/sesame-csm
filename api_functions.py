@@ -83,6 +83,15 @@ def generate_audio(conversation_id: int, txt: str):
 
     return audio_tensor
 
+def delete_conversation(conversation_id: int):
+    path = f'conversations/{conversation_id}.plk'
+    if os.path.exists(path):
+        os.remove(path)
+        return True
+    else: 
+        raise ValueError(f"Conversation {conversation_id} can't be found")
+    return False
+
 def main():
     conversation_id = create_conversation()
     tensor = generate_audio(conversation_id, "Hello world! I'm just happy to exist!")
