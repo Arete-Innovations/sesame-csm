@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from api_funcions import create_conversation generate_audio
+from api_functions import create_conversation, generate_audio, generate_wav_file
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
@@ -29,7 +29,7 @@ def generateConversation(payload: ConvRequest):
         return StreamingResponse(
             wav_io,
             media_type="audio/wav",
-            headers={"Content-Disposition": f'attachment; filename=\"{request.audio_id}.wav\"'}
+            headers={"Content-Disposition": f'attachment; filename=\"{payload.audioId}.wav\"'}
         )
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
